@@ -1,0 +1,10 @@
+target-version = "py313"
+
+[lint.isort]
+known-first-party = [
+    "framework_common",
+    "framework_fastapi",
+    "framework_repository",
+    "framework_service",
+    "framework_source",
+]

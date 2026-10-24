@@ -1,0 +1,11 @@
+[project]
+name = "framework-common"
+version = "0.1.0"
+description = "Shared exceptions, enums, and utility functions for Python applications."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
