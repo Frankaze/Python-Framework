@@ -31,13 +31,10 @@ finished. It disposes the cached Engine and clears the cache. Repeated close
 calls are safe; later factory access can initialize a new Engine. Cleanup is
 not wired automatically, and `close()` does not close outstanding Sessions.
 
-## Dependencies and migration status
+## Dependencies
 
 The current bases directly use SQLAlchemy, but do not import FastAPI, pyodbc,
 or pydantic-settings. Add framework-specific dependencies only when needed by
 actual shared functionality. SQLAlchemy is declared as `sqlalchemy>=2.1.4`.
 Run `uv sync` in this package directory to create or synchronize its environment
 using `uv.lock`.
-
-ILeague retains its existing ControllerBase, ModelBase, and Settings. Its
-dependencies, inheritance, and application lifespan have not yet been changed.

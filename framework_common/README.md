@@ -15,6 +15,4 @@ from framework_common.functions import function_enum
 ```
 
 Applications can subclass `ExceptionBase` for their own exception hierarchy.
-Business-specific enums such as ILeague's `EnumChampionClass` remain in the
-application. ILeague currently retains its original Common implementation and
-has not yet switched its dependencies or imports to this package.
+Business-specific enums remain in the consuming application.

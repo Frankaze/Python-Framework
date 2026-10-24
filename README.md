@@ -6,8 +6,8 @@ Python 3.13 or later.
 | Package | Shared functionality |
 | --- | --- |
 | [framework_common](framework_common/README.md) | Enum helpers, calendar months, and base exceptions |
-| [framework_repository](framework_repository/README.md) | Entity mixin, generic RepositoryBase, and root/child UnitOfWork |
-| [framework_service](framework_service/README.md) | Service lifecycle, query validation, and nested MapperBase |
+| [framework_repository](framework_repository/README.md) | Entity mixin, common/definition/transaction Repository bases, and root/child UnitOfWork |
+| [framework_service](framework_service/README.md) | Service lifecycle, DmAssignedBase, query validation, and partial-update mapping |
 | [framework_source](framework_source/README.md) | Shared source timeout and request interval settings |
 | [framework_fastapi](framework_fastapi/README.md) | ControllerBase and application-configured ModelBase |
 
