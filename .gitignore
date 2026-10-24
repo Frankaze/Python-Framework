@@ -1,0 +1,58 @@
+# ==============================
+# Python
+# ==============================
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Tool caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+
+
+# ==============================
+# Visual Studio
+# ==============================
+
+.vs/
+
+
+# ==============================
+# VS Code
+# ==============================
+
+.vscode/
+
+
+# ==============================
+# Environment / Secrets
+# ==============================
+
+.env
+.env.*
+!.env.example
+**/environments/*.env
+
+
+# ==============================
+# OS-generated files
+# ==============================
+
+.DS_Store
+Thumbs.db
+
+
+# ==============================
+# CodeGraph local index
+# ==============================
+
+.codegraph/
