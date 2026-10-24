@@ -1,0 +1,51 @@
+"""Track explicit field assignments independently from their values."""
+
+from collections.abc import Mapping
+from inspect import signature
+
+from framework_common.errors.standalones.validation.value_validation_error import (
+    ValueValidationNotAllowedError,
+)
+
+
+class DmAssignedBase:
+    """Distinguish an omitted field from a field explicitly assigned None."""
+
+    # region Properties
+
+    @property
+    def assigned_fields(self) -> frozenset[str]:
+        return frozenset(self._set_str_assigned_fields)
+
+    # endregion Properties
+
+    # region Constructor & Special Methods
+
+    def __init__(self) -> None:
+        self._set_str_assigned_fields: set[str] = set()
+
+    # endregion Constructor & Special Methods
+
+    # region Internal Methods
+
+    def _assign_fields(
+        self,
+        dic_values: Mapping[str, object],
+        dic_str_fields: Mapping[str, str],
+    ) -> None:
+        """Initialize only supplied arguments through the model's setters."""
+        _set_unknown: set[str] = set(dic_values) - set(dic_str_fields)
+        if _set_unknown:
+            raise ValueValidationNotAllowedError(
+                obj_field=signature(DmAssignedBase._assign_fields).parameters[
+                    "dic_values"
+                ],
+                obj_actual=min(_set_unknown),
+                tpl_allowed_values=tuple(sorted(dic_str_fields)),
+            )
+        _str_argument: str
+        _obj_value: object
+        for _str_argument, _obj_value in dic_values.items():
+            setattr(self, dic_str_fields[_str_argument], _obj_value)
+
+    # endregion Internal Methods

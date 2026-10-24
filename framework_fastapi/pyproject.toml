@@ -1,0 +1,21 @@
+[project]
+name = "framework-fastapi"
+version = "0.1.0"
+description = "Reusable controller and API model foundations for FastAPI applications."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi==0.162.2",
+    "framework-common",
+    "framework-repository",
+    "pydantic==2.14.3",
+    "sqlalchemy",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+framework-common = { path = "../framework_common", editable = true }
+framework-repository = { path = "../framework_repository", editable = true }
