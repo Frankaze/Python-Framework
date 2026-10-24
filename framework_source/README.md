@@ -15,6 +15,3 @@ source clients are responsible for applying them.
 Applications can subclass `SourceBase` for application-wide behavior before
 implementing their concrete sources. Website-specific clients, parsers, and
 source models remain in the application.
-
-ILeague currently retains its original SourceBase and has not switched its
-dependencies or imports to this package.

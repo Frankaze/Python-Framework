@@ -5,6 +5,10 @@ Reusable SQLAlchemy repository and transaction foundations for Python 3.13+.
 - `entity_base.py`: shared entity mixin; each application owns its ORM registry.
 - `repository_base.py`: generic entity access and dynamic queries using an
   externally owned Session; it does not commit, roll back, or close the Session.
+- `repository_definition_base.py`: `RepositoryDefinitionBase`, extending common
+  operations for configuration/master data with application-owned business keys.
+- `repository_transaction_base.py`: `RepositoryTransactionBase`, adding
+  `get_by_id(int_id, *, lst_ormo_options=None)` for integer transaction keys.
 - `unit_of_work.py`: lazy Session creation and explicit root/child transaction
   ownership. Children share the root Session and rollback-only state. Leaving
   the root context rolls back uncommitted changes and closes it, without an
@@ -26,15 +30,32 @@ class EntityBase(FrameworkEntityBase, DeclarativeBase):
     """Application-owned declarative base for mapped entities."""
 ```
 
-Applications may similarly subclass `RepositoryBase` to provide their own shared
-repository behavior. The inherited `create_sub_unit()` returns a Framework
-`UnitOfWork`, matching the original implementation.
+## Repository hierarchy
 
-## Dependencies and migration status
+```text
+RepositoryBase[TEntity]
+├── RepositoryDefinitionBase[TEntity]
+└── RepositoryTransactionBase[TEntity]
+```
+
+The common base provides `get_many`, `get_first`, `add`, and `delete`. Only the
+transaction subclass provides `get_by_id`; missing IDs return `None`. Loader
+options refresh cached entities through `populate_existing` as before.
+
+Definition repositories implement business-key methods such as `get_by_name`
+or `get_by_version` using the common query operations. Each application may
+subclass the appropriate Framework base for its own shared behavior. Existing
+consumers of `RepositoryBase.get_by_id` must switch to
+`RepositoryTransactionBase`; there is no compatibility alias on the common base.
+`EntityBase` remains shared and does not define an ID column.
+
+Repositories share the UoW-owned Session and never submit transactions themselves.
+`UnitOfWork.create_sub_unit()` returns a Framework `UnitOfWork` with the same
+transaction ownership rules.
+
+## Dependencies
 
 The implementation requires SQLAlchemy; it does not use pyodbc directly. The
 application selects and configures its database driver and Session factory.
 SQLAlchemy is declared as `sqlalchemy>=2.1.4`. Run `uv sync` in this package
 directory to create or synchronize its environment using `uv.lock`.
-ILeague currently retains its original implementation and has not switched its
-dependencies or imports to this package.

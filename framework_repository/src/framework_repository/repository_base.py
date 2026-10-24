@@ -27,17 +27,6 @@ class RepositoryBase[TEntity: EntityBase]:
 
     # region Public Methods
 
-    def get_by_id(
-        self, int_id: int, *, lst_ormo_options: list[ORMOption] | None = None
-    ) -> TEntity | None:
-        """Load by ID, refreshing cached entities when loader options are supplied."""
-        return self._sqls.get(
-            self._typ_entity,
-            int_id,
-            options=lst_ormo_options,
-            populate_existing=bool(lst_ormo_options),
-        )
-
     def get_many(
         self,
         lst_col_conditions: list[ColumnElement[bool]] | None = None,
