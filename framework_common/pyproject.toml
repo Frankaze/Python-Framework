@@ -1,7 +1,7 @@
 [project]
 name = "framework-common"
 version = "0.1.0"
-description = "Shared exceptions, enums, and utility functions for Python applications."
+description = "Shared errors, enums, and utility functions for Python applications."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []

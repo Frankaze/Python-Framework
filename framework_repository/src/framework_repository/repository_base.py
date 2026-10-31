@@ -1,5 +1,6 @@
 """Shared entity operations and dynamic queries without transaction ownership."""
 
+from inspect import signature
 from typing import Any
 
 from sqlalchemy import Select, select
@@ -7,6 +8,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm.interfaces import ORMOption
 from sqlalchemy.sql.elements import ColumnElement
 
+from framework_common.errors.standalones.validation import ValueValidationRangeError
 from framework_repository.entity_base import EntityBase
 
 
@@ -42,7 +44,15 @@ class RepositoryBase[TEntity: EntityBase]:
         Order expressions may contain columns with different value types.
         """
         if int_limit is not None and int_limit < 0:
-            raise ValueError("int_limit must be greater than or equal to zero.")
+            raise ValueValidationRangeError(
+                field=signature(RepositoryBase.get_many).parameters["int_limit"],
+                value_actual=int_limit,
+                minimum=0,
+                maximum=None,
+                bol_is_minimum_inclusive=True,
+                bol_is_maximum_inclusive=True,
+                bol_is_finite_required=False,
+            )
 
         _stmt: Select[tuple[TEntity]] = select(self._typ_entity)
         if lst_ormo_options:

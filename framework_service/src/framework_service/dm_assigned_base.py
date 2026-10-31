@@ -1,6 +1,11 @@
 """Track explicit field assignments independently from their values."""
 
 from collections.abc import Mapping
+from inspect import signature
+
+from framework_common.errors.standalones.validation import (
+    ValueValidationNotAllowedError,
+)
 
 
 class DmAssignedBase:
@@ -31,8 +36,10 @@ class DmAssignedBase:
         """Initialize only supplied arguments through the model's setters."""
         _set_unknown: set[str] = set(dic_values) - set(dic_str_fields)
         if _set_unknown:
-            raise TypeError(
-                "Unknown model arguments: " + ", ".join(sorted(_set_unknown))
+            raise ValueValidationNotAllowedError(
+                field=signature(DmAssignedBase._assign_fields).parameters["dic_values"],
+                value_actual=sorted(_set_unknown)[0],
+                tuple_allowed_values=tuple(sorted(dic_str_fields)),
             )
         _str_argument: str
         _value: object

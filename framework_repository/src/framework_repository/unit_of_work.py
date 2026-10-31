@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from types import TracebackType
+from types import FunctionType, TracebackType
 from typing import Self
 
 from sqlalchemy.orm import Session
+
+from framework_common.errors.containers import PersistenceError
 
 
 class UnitOfWork:
@@ -26,7 +28,7 @@ class UnitOfWork:
 
     @property
     def session(self) -> Session:
-        self._ensure_open()
+        self._ensure_open(UnitOfWork.session.fget)
         if self._sst_state.session is None:
             self._sst_state.session = self._sst_state.session_factory()
         return self._sst_state.session
@@ -43,9 +45,9 @@ class UnitOfWork:
         self._bol_entered: bool = False
 
     def __enter__(self) -> Self:
-        self._ensure_open()
+        self._ensure_open(UnitOfWork.__enter__)
         if self._bol_entered:
-            raise RuntimeError("This unit of work context is already active.")
+            raise PersistenceError.AlreadyActiveError()
         self._bol_entered = True
         return self
 
@@ -70,7 +72,7 @@ class UnitOfWork:
     # region Public Methods
 
     def create_sub_unit(self) -> UnitOfWork:
-        self._ensure_open()
+        self._ensure_open(UnitOfWork.create_sub_unit)
         _uow_child: UnitOfWork = UnitOfWork(self._sst_state.session_factory)
         _uow_child._sst_state = self._sst_state
         _uow_child._bol_is_sub_unit = True
@@ -78,9 +80,11 @@ class UnitOfWork:
 
     def commit(self) -> None:
         """Commit all shared changes on the root; never commit on a child."""
-        self._ensure_open()
+        self._ensure_open(UnitOfWork.commit)
         if self._sst_state.is_rollback_only:
-            raise RuntimeError("The unit of work failed; rollback is required.")
+            raise PersistenceError.TransactionMarkedForRollbackError(
+                fnc_method=UnitOfWork.commit
+            )
         if self._bol_is_sub_unit:
             return
         try:
@@ -91,9 +95,11 @@ class UnitOfWork:
 
     def flush(self) -> None:
         """Send pending SQL (e.g. to obtain generated IDs) without committing."""
-        self._ensure_open()
+        self._ensure_open(UnitOfWork.flush)
         if self._sst_state.is_rollback_only:
-            raise RuntimeError("The unit of work failed; rollback is required.")
+            raise PersistenceError.TransactionMarkedForRollbackError(
+                fnc_method=UnitOfWork.flush
+            )
         try:
             self.session.flush()
         except BaseException:
@@ -102,10 +108,10 @@ class UnitOfWork:
 
     def rollback(self) -> None:
         """Roll back on the root; on a child, mark rollback-only and raise."""
-        self._ensure_open()
+        self._ensure_open(UnitOfWork.rollback)
         if self._bol_is_sub_unit:
             self._sst_state.is_rollback_only = True
-            raise RuntimeError("The child unit of work requested rollback.")
+            raise PersistenceError.TransactionRollbackRequestedError()
         if self._sst_state.session is not None:
             self._sst_state.session.rollback()
         self._sst_state.is_rollback_only = False
@@ -124,9 +130,9 @@ class UnitOfWork:
 
     # region Internal Methods
 
-    def _ensure_open(self) -> None:
+    def _ensure_open(self, fnc_method: FunctionType) -> None:
         if self._sst_state.is_closed:
-            raise RuntimeError("The unit of work is closed.")
+            raise PersistenceError.ClosedError(fnc_method=fnc_method)
 
     # endregion Internal Methods
 
