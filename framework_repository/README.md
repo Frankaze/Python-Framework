@@ -14,6 +14,20 @@ Reusable SQLAlchemy repository and transaction foundations for Python 3.13+.
   the root context rolls back uncommitted changes and closes it, without an
   automatic commit. Children are not SQL SAVEPOINTs.
 
+## Persistence errors
+
+UoW lifecycle checks use `PersistenceError` from
+`framework_common.errors.containers`. Re-entering an active context raises
+`AlreadyActiveError`; accessing a closed context raises `ClosedError`, whose
+`method` identifies the requested operation. A rollback-only transaction rejects
+commit/flush with `TransactionMarkedForRollbackError`, also carrying `method`.
+A child `rollback()` first marks the shared transaction rollback-only, then
+raises `TransactionRollbackRequestedError`. Propagation out of the root context
+causes the actual rollback; catching the request does not clear the shared flag.
+Root rollback executes immediately and clears it. These errors contain no
+response messages and do not inherit function-validation errors. Original
+database exceptions continue to propagate unchanged.
+
 ## Application entity base
 
 Create one declarative base per application, combining the Framework mixin with

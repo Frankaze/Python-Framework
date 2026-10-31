@@ -3,15 +3,24 @@ revision = 5
 requires-python = ">=3.13"
 
 [[package]]
+name = "framework-common"
+version = "0.1.0"
+source = { editable = "../framework_common" }
+
+[[package]]
 name = "framework-repository"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "framework-common" },
     { name = "sqlalchemy" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "sqlalchemy", specifier = ">=2.1.4" }]
+requires-dist = [
+    { name = "framework-common", editable = "../framework_common" },
+    { name = "sqlalchemy", specifier = ">=2.1.4" },
+]
 
 [[package]]
 name = "sqlalchemy"

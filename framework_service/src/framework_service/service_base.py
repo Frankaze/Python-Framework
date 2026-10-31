@@ -4,12 +4,21 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+from inspect import signature
 from types import TracebackType
 from typing import Self, overload
 
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.elements import ColumnElement
 
+from framework_common.errors.standalones.validation import (
+    FunctionValidationNotImplementedError,
+    MapperValidationResultEmptyError,
+    TypeValidationError,
+    ValueValidationExactlyOneRequiredError,
+    ValueValidationLengthError,
+    ValueValidationRequiredError,
+)
 from framework_repository import UnitOfWork
 from framework_service.dm_assigned_base import DmAssignedBase
 
@@ -43,16 +52,24 @@ class ServiceBase:
         *,
         uow: UnitOfWork | None = None,
     ) -> None:
-        if fnc_session_factory is not None and uow is not None:
-            raise ValueError("Supply either a Session factory or a UoW, not both.")
+        _tuple_provided: tuple[bool, bool] = (
+            fnc_session_factory is not None,
+            uow is not None,
+        )
+        if sum(_tuple_provided) != 1:
+            raise ValueValidationExactlyOneRequiredError(
+                field=(
+                    signature(ServiceBase.__init__).parameters["fnc_session_factory"],
+                    signature(ServiceBase.__init__).parameters["uow"],
+                ),
+                value_actual=_tuple_provided,
+            )
 
         self._uow: UnitOfWork
         if uow is not None:
             self._uow = uow
         elif fnc_session_factory is not None:
             self._uow = UnitOfWork(fnc_session_factory)
-        else:
-            raise ValueError("A Session factory or a UoW is required.")
 
     def __enter__(self) -> Self:
         self._uow.__enter__()
@@ -77,16 +94,37 @@ class ServiceBase:
     ) -> list[ColumnElement[bool]]:
         """Validate and map a query using the supplied query-specific mapper."""
         if dm_query is None:
-            raise ValueError("A query is required.")
+            raise ValueValidationRequiredError(
+                field=signature(ServiceBase._get_query_conditions).parameters[
+                    "dm_query"
+                ],
+                value_actual=dm_query,
+            )
         if not isinstance(dm_query, DmAssignedBase):
-            raise TypeError("A query must inherit DmAssignedBase.")
+            raise TypeValidationError(
+                field=signature(ServiceBase._get_query_conditions).parameters[
+                    "dm_query"
+                ],
+                typ_expected_type=DmAssignedBase,
+                typ_actual_type=type(dm_query),
+                bol_is_none_allowed=False,
+            )
         if not dm_query.assigned_fields:
-            raise ValueError("A query must contain at least one assigned field.")
+            raise ValueValidationLengthError(
+                field=DmAssignedBase.assigned_fields,
+                value_actual=dm_query.assigned_fields,
+                int_minimum_length=1,
+                int_maximum_length=None,
+                int_actual_length=0,
+                str_length_unit="items",
+            )
         _lst_col_conditions: list[ColumnElement[bool]] = typ_mapper.to_conditions(
             dm_query
         )
         if not _lst_col_conditions:
-            raise ValueError("A query must contain at least one condition.")
+            raise MapperValidationResultEmptyError(
+                typ_mapper=typ_mapper, fnc_method=typ_mapper.to_conditions
+            )
         return _lst_col_conditions
 
     def _get_update_values[TUpdate: DmAssignedBase](
@@ -96,14 +134,31 @@ class ServiceBase:
     ) -> dict[str, object]:
         """Validate and map all update values before accessing an entity."""
         if dm_update is None:
-            raise ValueError("An update is required.")
+            raise ValueValidationRequiredError(
+                field=signature(ServiceBase._get_update_values).parameters["dm_update"],
+                value_actual=dm_update,
+            )
         if not isinstance(dm_update, DmAssignedBase):
-            raise TypeError("An update must inherit DmAssignedBase.")
+            raise TypeValidationError(
+                field=signature(ServiceBase._get_update_values).parameters["dm_update"],
+                typ_expected_type=DmAssignedBase,
+                typ_actual_type=type(dm_update),
+                bol_is_none_allowed=False,
+            )
         if not dm_update.assigned_fields:
-            raise ValueError("An update must contain at least one assigned field.")
+            raise ValueValidationLengthError(
+                field=DmAssignedBase.assigned_fields,
+                value_actual=dm_update.assigned_fields,
+                int_minimum_length=1,
+                int_maximum_length=None,
+                int_actual_length=0,
+                str_length_unit="items",
+            )
         _dic_values: dict[str, object] = typ_mapper.to_update_values(dm_update)
         if not _dic_values:
-            raise ValueError("An update must map to at least one writable field.")
+            raise MapperValidationResultEmptyError(
+                typ_mapper=typ_mapper, fnc_method=typ_mapper.to_update_values
+            )
         return _dic_values
 
     def _apply_update[TEntity, TUpdate: DmAssignedBase](
@@ -134,11 +189,14 @@ class ServiceBase:
 
         # region Public Methods
 
-        @staticmethod
+        @classmethod
         @abstractmethod
-        def to_conditions(dm_query: TQuery) -> list[ColumnElement[bool]]:
+        def to_conditions(cls, dm_query: TQuery) -> list[ColumnElement[bool]]:
             """Convert a query model into predicates without executing queries."""
-            raise NotImplementedError("The mapper must implement to_conditions().")
+            raise FunctionValidationNotImplementedError(
+                typ_owner=cls,
+                fnc_method=ServiceBase.MapperBase.to_conditions.__func__,
+            )
 
         # endregion Public Methods
 
@@ -147,11 +205,14 @@ class ServiceBase:
 
         # region Public Methods
 
-        @staticmethod
+        @classmethod
         @abstractmethod
-        def to_update_values(dm_update: TUpdate) -> dict[str, object]:
+        def to_update_values(cls, dm_update: TUpdate) -> dict[str, object]:
             """Validate and convert assigned fields without mutating an entity."""
-            raise NotImplementedError("The mapper must implement to_update_values().")
+            raise FunctionValidationNotImplementedError(
+                typ_owner=cls,
+                fnc_method=ServiceBase.UpdateMapperBase.to_update_values.__func__,
+            )
 
         # endregion Public Methods
 

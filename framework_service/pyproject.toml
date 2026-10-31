@@ -5,6 +5,7 @@ description = "Reusable service and mapper foundations for Python applications."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "framework-common",
     "framework-repository",
     "sqlalchemy>=2.1.4",
 ]
@@ -14,4 +15,5 @@ requires = ["uv_build>=0.12.23,<0.13.0"]
 build-backend = "uv_build"
 
 [tool.uv.sources]
+framework-common = { path = "../framework_common", editable = true }
 framework-repository = { path = "../framework_repository", editable = true }
