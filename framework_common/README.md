@@ -10,14 +10,18 @@ has no third-party runtime dependencies.
 - `functions/function_integer.py`: `validate()` checks exact integer type
   (excluding bool), nullability and inclusive bounds.
 - `enums/enum_month.py`: calendar months with numeric values from 1 to 12.
+- `enums/enum_language.py`: `EnumLanguage` with `EN_US` (`en-US`),
+  `ZH_TW` (`zh-TW`), and `KO_KR` (`ko-KR`).
+- `enums/enum_timeframe.py`: `EnumTimeframe` with Second, Minute, Hour, Day,
+  Week, Month, Quarter, and Year string values; no abbreviations or multipliers.
 - `errors/error_base.py`: base exception for application-specific errors.
 - `errors/container_error_base.py`: extension point for public error containers.
 - `errors/containers/persistence_error.py`: `PersistenceError` groups nested
   `AlreadyActiveError`, `ClosedError`, `TransactionMarkedForRollbackError` and
   `TransactionRollbackRequestedError`. They directly inherit `ErrorBase`.
   Closed/marked errors carry the attempted `method` function as read-only
-  metadata. The container itself is not an exception and is exported from
-  `framework_common.errors.containers`.
+  metadata. The container itself is not an exception; import it directly from
+  `framework_common.errors.containers.persistence_error`.
 - `errors/standalones/crawl/crawl_already_running_error.py`: reject a crawl while another
   crawl holds the shared coordination scope.
 - `errors/standalones/validation/type_validation_error.py`: describe a type mismatch with
@@ -35,10 +39,12 @@ has no third-party runtime dependencies.
   responsible class and the unimplemented function without storing names or text.
 
 ```python
-from framework_common.enums import EnumMonth
-from framework_common.errors import ErrorBase
-from framework_common.errors.standalones.crawl import CrawlAlreadyRunningError
-from framework_common.errors.standalones.validation import TypeValidationError, ValueValidationError
+from framework_common.enums.enum_month import EnumMonth
+from framework_common.enums.enum_timeframe import EnumTimeframe
+from framework_common.errors.error_base import ErrorBase
+from framework_common.errors.standalones.crawl.crawl_already_running_error import CrawlAlreadyRunningError
+from framework_common.errors.standalones.validation.type_validation_error import TypeValidationError
+from framework_common.errors.standalones.validation.value_validation_error import ValueValidationError
 from framework_common.functions import function_enum
 ```
 
@@ -47,8 +53,9 @@ Business-specific enums remain in the consuming application.
 
 Organize error containers under `errors/containers/` and standalone errors by
 capability under `errors/standalones/<capability>/`, matching application packages.
-Export concrete errors from their subpackages; the `errors` root exports only
-`ErrorBase` and `ContainerErrorBase`, whose modules remain at that root.
+Import errors directly from their defining modules. `ErrorBase` and
+`ContainerErrorBase` remain in `errors/error_base.py` and
+`errors/container_error_base.py`; package initializers do not re-export classes.
 
 
 `CrawlAlreadyRunningError(str_target)` carries a read-only `target`. Its class identifies
@@ -148,3 +155,31 @@ raise ValueValidationError(
     value_actual="disabled",
 )
 ```
+
+## API error codes
+
+```python
+from framework_common.enums.enum_api_error_code import EnumApiErrorCode
+from framework_common.enums.enum_language import EnumLanguage
+
+_enm_error: EnumApiErrorCode = EnumApiErrorCode.API_RETIRED
+_str_code: str = _enm_error.value
+_str_message_en: str = _enm_error.message_en
+_str_message_zh_tw: str = _enm_error.message_zh_tw
+_str_message_ko_kr: str = _enm_error.message_ko_kr
+_str_message: str = _enm_error.get_message(EnumLanguage.KO_KR)
+```
+
+| Code | English message | Traditional Chinese message | Korean message |
+| --- | --- | --- | --- |
+| `API_RETIRED` | This API endpoint has been retired. | 此 API 端點已停止服務。 | 이 API 엔드포인트는 더 이상 제공되지 않습니다. |
+| `TOKEN_INVALID` | Invalid authentication token. | 驗證權杖無效。 | 유효하지 않은 인증 토큰입니다. |
+
+`EnumApiErrorCode` inherits the standard library Enum. Its public code values
+intentionally use uppercase strings for frontend clients. All message properties
+are read-only. `get_message(enm_language=EnumLanguage.EN_US)` selects the message
+using the shared language Enum and defaults to English. Applications choose the
+message language and HTTP status, and use
+`.value` for the response code. These identifiers are not HTTP status codes or
+internal exception types. Importing the Enum does not register exception handlers,
+retire routes, validate tokens, or select a language from request headers.

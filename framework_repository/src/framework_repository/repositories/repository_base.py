@@ -8,8 +8,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm.interfaces import ORMOption
 from sqlalchemy.sql.elements import ColumnElement
 
-from framework_common.errors.standalones.validation import ValueValidationRangeError
-from framework_repository.entity_base import EntityBase
+from framework_common.errors.standalones.validation.value_validation_error import (
+    ValueValidationRangeError,
+)
+from framework_repository.models.entity_base import EntityBase
 
 
 class RepositoryBase[TEntity: EntityBase]:

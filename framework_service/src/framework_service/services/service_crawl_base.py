@@ -9,11 +9,13 @@ from pathlib import Path
 from tempfile import gettempdir
 from typing import BinaryIO
 
-from framework_common.errors.standalones.crawl import (
+from framework_common.errors.standalones.crawl.crawl_already_running_error import (
     CrawlAlreadyRunningError,
+)
+from framework_common.errors.standalones.crawl.crawl_scope_required_error import (
     CrawlScopeRequiredError,
 )
-from framework_service.service_base import ServiceBase
+from framework_service.services.service_base import ServiceBase
 
 
 class ServiceCrawlBase(ServiceBase):
@@ -27,7 +29,7 @@ class ServiceCrawlBase(ServiceBase):
         str_scope: str,
         *,
         fnc_running_error: Callable[[], CrawlAlreadyRunningError] | None = None,
-    ) -> Generator[None, None, None]:
+    ) -> Generator[None]:
         """Hold an OS file lock until scope exit, including exceptional exits.
 
         Processes must share a host and temp directory. Keep the lock file so

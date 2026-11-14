@@ -2,22 +2,50 @@
 
 Reusable SQLAlchemy repository and transaction foundations for Python 3.13+.
 
-- `entity_base.py`: shared entity mixin; each application owns its ORM registry.
-- `repository_base.py`: generic entity access and dynamic queries using an
+- `models/entity_base.py`: shared entity mixin; each application owns its ORM registry.
+- `repositories/repository_base.py`: generic entity access and dynamic queries using an
   externally owned Session; it does not commit, roll back, or close the Session.
-- `repository_definition_base.py`: `RepositoryDefinitionBase`, extending common
+- `repositories/repository_definition_base.py`: `RepositoryDefinitionBase`, extending common
   operations for configuration/master data with application-owned business keys.
-- `repository_transaction_base.py`: `RepositoryTransactionBase`, adding
+- `repositories/repository_transaction_base.py`: `RepositoryTransactionBase`, adding
   `get_by_id(int_id, *, lst_ormo_options=None)` for integer transaction keys.
 - `unit_of_work.py`: lazy Session creation and explicit root/child transaction
   ownership. Children share the root Session and rollback-only state. Leaving
   the root context rolls back uncommitted changes and closes it, without an
   automatic commit. Children are not SQL SAVEPOINTs.
 
+## Structure and imports
+
+```text
+framework_repository/
+├── __init__.py
+├── unit_of_work.py
+├── models/
+│   ├── __init__.py
+│   └── entity_base.py
+└── repositories/
+    ├── __init__.py
+    ├── repository_base.py
+    ├── repository_definition_base.py
+    └── repository_transaction_base.py
+```
+
+```python
+from framework_repository.unit_of_work import UnitOfWork
+from framework_repository.models.entity_base import EntityBase
+from framework_repository.repositories.repository_base import RepositoryBase
+from framework_repository.repositories.repository_definition_base import RepositoryDefinitionBase
+from framework_repository.repositories.repository_transaction_base import RepositoryTransactionBase
+```
+
+Class modules follow the same role folders as consuming applications. UnitOfWork
+remains package-level transaction infrastructure. Import each class from its
+defining module; package initializers do not re-export classes.
+
 ## Persistence errors
 
 UoW lifecycle checks use `PersistenceError` from
-`framework_common.errors.containers`. Re-entering an active context raises
+`framework_common.errors.containers.persistence_error`. Re-entering an active context raises
 `AlreadyActiveError`; accessing a closed context raises `ClosedError`, whose
 `method` identifies the requested operation. A rollback-only transaction rejects
 commit/flush with `TransactionMarkedForRollbackError`, also carrying `method`.
@@ -37,7 +65,7 @@ base. Each application gets a separate registry and metadata.
 ```python
 from sqlalchemy.orm import DeclarativeBase
 
-from framework_repository import EntityBase as FrameworkEntityBase
+from framework_repository.models.entity_base import EntityBase as FrameworkEntityBase
 
 
 class EntityBase(FrameworkEntityBase, DeclarativeBase):

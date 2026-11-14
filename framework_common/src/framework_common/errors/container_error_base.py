@@ -1,33 +1,33 @@
 """Shared validation error entries for public application error containers."""
 
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.type_validation_error import (
     TypeValidationError as _TypeValidationError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationCharacterSetError as _ValueValidationCharacterSetError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationError as _ValueValidationError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationExactlyOneRequiredError as _ValueValidationExactlyOneRequiredError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationFormatError as _ValueValidationFormatError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationLengthError as _ValueValidationLengthError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationMustDifferError as _ValueValidationMustDifferError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationNotAllowedError as _ValueValidationNotAllowedError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationRangeError as _ValueValidationRangeError,
 )
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationRequiredError as _ValueValidationRequiredError,
 )
 

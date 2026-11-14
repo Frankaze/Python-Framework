@@ -2,8 +2,8 @@
 
 from sqlalchemy.orm.interfaces import ORMOption
 
-from framework_repository.entity_base import EntityBase
-from framework_repository.repository_base import RepositoryBase
+from framework_repository.models.entity_base import EntityBase
+from framework_repository.repositories.repository_base import RepositoryBase
 
 
 class RepositoryTransactionBase[TEntity: EntityBase](RepositoryBase[TEntity]):

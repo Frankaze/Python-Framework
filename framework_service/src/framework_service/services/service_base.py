@@ -11,16 +11,22 @@ from typing import Self, overload
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.elements import ColumnElement
 
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.function_validation_error import (
     FunctionValidationNotImplementedError,
+)
+from framework_common.errors.standalones.validation.mapper_validation_error import (
     MapperValidationResultEmptyError,
+)
+from framework_common.errors.standalones.validation.type_validation_error import (
     TypeValidationError,
+)
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationExactlyOneRequiredError,
     ValueValidationLengthError,
     ValueValidationRequiredError,
 )
-from framework_repository import UnitOfWork
-from framework_service.dm_assigned_base import DmAssignedBase
+from framework_repository.unit_of_work import UnitOfWork
+from framework_service.models.dm_assigned_base import DmAssignedBase
 
 
 class ServiceBase:

@@ -8,7 +8,7 @@ from typing import Self
 
 from sqlalchemy.orm import Session
 
-from framework_common.errors.containers import PersistenceError
+from framework_common.errors.containers.persistence_error import PersistenceError
 
 
 class UnitOfWork:

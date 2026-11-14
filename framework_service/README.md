@@ -4,8 +4,26 @@ Shared service lifecycle, assignment tracking, query mapping, and partial update
 for Python 3.13+.
 
 ```python
-from framework_service import DmAssignedBase, ServiceBase, ServiceCrawlBase
+from framework_service.models.dm_assigned_base import DmAssignedBase
+from framework_service.services.service_base import ServiceBase
+from framework_service.services.service_crawl_base import ServiceCrawlBase
 ```
+
+```text
+framework_service/
+├── __init__.py
+├── models/
+│   ├── __init__.py
+│   └── dm_assigned_base.py
+└── services/
+    ├── __init__.py
+    ├── service_base.py
+    └── service_crawl_base.py
+```
+
+Class modules follow the same role folders as consuming applications. Mapper
+bases remain nested in `ServiceBase`. Import each class from its defining module;
+package initializers do not re-export classes.
 
 `ServiceBase` accepts exactly one of a Session factory or an existing Framework
 `UnitOfWork`. It creates a root UoW for a factory, or uses the supplied UoW as-is,
@@ -77,7 +95,7 @@ there is no separate public `CrawlGuard`. General services inherit `ServiceBase`
 which has no crawl-specific methods. Use the
 same application scope across services that must not crawl concurrently. Hold
 it through source access, persistence, commit and failure rollback. Contention
-raises `framework_common.errors.standalones.crawl.CrawlAlreadyRunningError`; the HTTP layer decides
+raises `framework_common.errors.standalones.crawl.crawl_already_running_error.CrawlAlreadyRunningError`; the HTTP layer decides
 the response status. This adds no implicit transaction or commit behavior.
 
 Windows uses `msvcrt.locking`, Unix uses `fcntl.flock`. Workers must share the

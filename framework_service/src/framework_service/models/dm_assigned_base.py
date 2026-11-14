@@ -3,7 +3,7 @@
 from collections.abc import Mapping
 from inspect import signature
 
-from framework_common.errors.standalones.validation import (
+from framework_common.errors.standalones.validation.value_validation_error import (
     ValueValidationNotAllowedError,
 )
 
@@ -38,7 +38,7 @@ class DmAssignedBase:
         if _set_unknown:
             raise ValueValidationNotAllowedError(
                 field=signature(DmAssignedBase._assign_fields).parameters["dic_values"],
-                value_actual=sorted(_set_unknown)[0],
+                value_actual=min(_set_unknown),
                 tuple_allowed_values=tuple(sorted(dic_str_fields)),
             )
         _str_argument: str
