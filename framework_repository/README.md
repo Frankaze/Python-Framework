@@ -129,7 +129,9 @@ transaction ownership rules.
 
 ## Dependencies
 
-The implementation requires SQLAlchemy; it does not use pyodbc directly. The
-application selects and configures its database driver and Session factory.
+The implementation requires SQLAlchemy. The shared database is PostgreSQL, so
+this package also pins the psycopg driver (`psycopg[binary]==3.3.9`); the
+Repository code itself does not import psycopg. The application still creates
+its own Engine with the `postgresql+psycopg` dialect and its Session factory.
 SQLAlchemy is pinned to `sqlalchemy==2.1.8`. Run `uv sync` in this package
 directory to create or synchronize its environment using `uv.lock`.

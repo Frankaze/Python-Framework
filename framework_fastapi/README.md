@@ -125,7 +125,7 @@ copy or alias is retained.
 The endpoint dependency uses FastAPI's `HTTPException` and HTTP status constants.
 FastAPI is pinned to `fastapi==0.162.2` without CLI extras, and Pydantic is pinned
 to `pydantic==2.14.3`; the package does not
-require pyodbc or pydantic-settings. SQLAlchemy is declared without a version
+require pydantic-settings or a database driver directly. SQLAlchemy is declared without a version
 specifier and follows framework_repository's shared version pin.
 Run `uv sync` in this package directory to create or synchronize its environment
 using `uv.lock`.

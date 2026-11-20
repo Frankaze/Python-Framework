@@ -30,9 +30,7 @@ def validate(
     if not _str_actual.strip():
         raise typ_container.ValueValidationRequiredError(property_field, _str_actual)
     _int_length: int = (
-        len(_str_actual.encode("utf-16-le")) // 2
-        if bol_use_utf16
-        else len(_str_actual)
+        len(_str_actual.encode("utf-16-le")) // 2 if bol_use_utf16 else len(_str_actual)
     )
     if _int_length > int_maximum_length:
         raise typ_container.ValueValidationLengthError(

@@ -10,7 +10,7 @@ has no third-party runtime dependencies.
 - `functions/function_integer.py`: `validate()` checks exact integer type
   (excluding bool), nullability and inclusive bounds.
 - `functions/function_datetime.py`: `to_utc_aware()` marks a naive datetime that
-  is already UTC (such as a `DATETIME2` value written with `SYSUTCDATETIME()`)
+  is already UTC (such as a PostgreSQL `TIMESTAMP` column stored as naive UTC)
   as UTC so JSON output carries the offset. `None` and aware values are returned
   unchanged; it never converts between time zones. `to_utc_naive()` is the
   reverse for storage: it converts an aware value to UTC and drops the offset,
@@ -91,9 +91,15 @@ from framework_common.enums.enum_month import EnumMonth
 from framework_common.enums.enum_timeframe import EnumTimeframe
 from framework_common.enums.enum_update_operation import EnumUpdateOperation
 from framework_common.errors.error_base import ErrorBase
-from framework_common.errors.standalones.crawl.crawl_already_running_error import CrawlAlreadyRunningError
-from framework_common.errors.standalones.validation.type_validation_error import TypeValidationError
-from framework_common.errors.standalones.validation.value_validation_error import ValueValidationError
+from framework_common.errors.standalones.crawl.crawl_already_running_error import (
+    CrawlAlreadyRunningError,
+)
+from framework_common.errors.standalones.validation.type_validation_error import (
+    TypeValidationError,
+)
+from framework_common.errors.standalones.validation.value_validation_error import (
+    ValueValidationError,
+)
 from framework_common.functions import function_enum
 ```
 
