@@ -11,6 +11,7 @@ Python 3.13 or later.
 | [framework_source](framework_source/README.md) | Shared source timeout and request interval settings |
 | [framework_fastapi](framework_fastapi/README.md) | ControllerBase, application-configured ModelBase, and endpoint-retirement dependency; depends on Common and Repository |
 | [framework_job](framework_job/README.md) | Installable job package scaffold with APScheduler 3.x; job abstractions and scheduling lifecycle are pending design |
+| [framework_tool](framework_tool/README.md) | Development tools only (not a library): pinned Ruff version, shared `ruff.toml`, and check scripts for the Framework and its products |
 
 ## Development
 
@@ -27,6 +28,14 @@ Service references Repository through an editable sibling path. Preserve the
 relative package layout on Windows and macOS, and run `uv sync` on each machine.
 Virtual environments and caches are excluded from Git; commit source files,
 project configuration, `.python-version`, and lockfiles.
+
+Check code with the Ruff version pinned in `framework_tool`; the root
+`ruff.toml` extends its shared rules and lists the Framework packages as
+first-party:
+
+```powershell
+.\framework_tool\scripts\scpt_check_python.ps1
+```
 
 ## Application boundaries
 

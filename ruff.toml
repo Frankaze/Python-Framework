@@ -1,4 +1,5 @@
-target-version = "py313"
+# Framework Ruff settings: shared rules come from framework_tool/ruff.toml.
+extend = "framework_tool/ruff.toml"
 
 [lint.isort]
 known-first-party = [

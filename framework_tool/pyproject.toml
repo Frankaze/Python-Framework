@@ -1,0 +1,11 @@
+[project]
+name = "framework-tool"
+version = "0.1.0"
+description = "Shared Python development tools for the Framework and its products."
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff==0.17.6",
+]

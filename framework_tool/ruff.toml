@@ -1,0 +1,6 @@
+# Shared Ruff rules for the Framework and its products (ILeague, IndicatorBlitz).
+# Each repository keeps a small ruff.toml above its packages that extends this
+# file and adds its own first-party packages; Ruff and the VS Code extension
+# discover that file from the checked file's location.
+
+target-version = "py313"
