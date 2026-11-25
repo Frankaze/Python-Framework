@@ -9,4 +9,5 @@ known-first-party = [
     "framework_repository",
     "framework_service",
     "framework_source",
+    "framework_utility",
 ]

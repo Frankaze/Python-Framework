@@ -11,6 +11,7 @@ Python 3.13 or later.
 | [framework_source](framework_source/README.md) | Shared source timeout and request interval settings |
 | [framework_fastapi](framework_fastapi/README.md) | ControllerBase, application-configured ModelBase, and endpoint-retirement dependency; depends on Common and Repository |
 | [framework_job](framework_job/README.md) | Installable job package scaffold with APScheduler 3.x; job abstractions and scheduling lifecycle are pending design |
+| [framework_utility](framework_utility/README.md) | Installable runtime utility package with an editable dependency on Common |
 | [framework_tool](framework_tool/README.md) | Development tools only (not a library): pinned Ruff version, shared `ruff.toml`, and check scripts for the Framework and its products |
 
 ## Development

@@ -30,9 +30,10 @@ from framework_repository.repositories.repository_base import RepositoryBase
 from framework_repository.unit_of_work import UnitOfWork
 from framework_service.models.dm_assigned_base import DmAssignedBase
 from framework_service.models.dm_update_base import DmUpdateBase
+from framework_utility.logger_mixin import LoggerMixin
 
 
-class ServiceBase:
+class ServiceBase(LoggerMixin):
     """Create a root UoW or use a supplied UoW, keeping commits explicit.
 
     Supply exactly one of a Session factory or an existing UoW. Use a fresh

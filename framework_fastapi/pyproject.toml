@@ -8,6 +8,7 @@ dependencies = [
     "fastapi==0.162.2",
     "framework-common",
     "framework-repository",
+    "framework-utility",
     "pydantic==2.14.3",
     "sqlalchemy",
 ]
@@ -19,3 +20,4 @@ build-backend = "uv_build"
 [tool.uv.sources]
 framework-common = { path = "../framework_common", editable = true }
 framework-repository = { path = "../framework_repository", editable = true }
+framework-utility = { path = "../framework_utility", editable = true }

@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "framework-common",
     "framework-repository",
+    "framework-utility",
     "sqlalchemy",
 ]
 
@@ -17,3 +18,4 @@ build-backend = "uv_build"
 [tool.uv.sources]
 framework-common = { path = "../framework_common", editable = true }
 framework-repository = { path = "../framework_repository", editable = true }
+framework-utility = { path = "../framework_utility", editable = true }

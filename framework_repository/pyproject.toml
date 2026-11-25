@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "framework-common",
+    "framework-utility",
     "psycopg[binary]==3.3.9",
     "sqlalchemy==2.1.8",
 ]
@@ -16,3 +17,4 @@ build-backend = "uv_build"
 
 [tool.uv.sources]
 framework-common = { path = "../framework_common", editable = true }
+framework-utility = { path = "../framework_utility", editable = true }

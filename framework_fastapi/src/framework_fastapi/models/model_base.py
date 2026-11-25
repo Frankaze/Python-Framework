@@ -6,8 +6,10 @@ from threading import Lock
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from framework_utility.logger_mixin import LoggerMixin
 
-class ModelBase:
+
+class ModelBase(LoggerMixin):
     """Lazily own an Engine supplied by an application-specific factory.
 
     The factory must return a new Engine owned by this model. Settings, database

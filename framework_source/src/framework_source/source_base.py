@@ -1,7 +1,9 @@
 """Shared configuration for all website-specific sources."""
 
+from framework_utility.logger_mixin import LoggerMixin
 
-class SourceBase:
+
+class SourceBase(LoggerMixin):
     """Store connection settings shared by source implementations."""
 
     # region Properties

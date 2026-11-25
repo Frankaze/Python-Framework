@@ -18,9 +18,10 @@ from framework_common.errors.standalones.validation.value_validation_error impor
     ValueValidationRangeError,
 )
 from framework_repository.models.entity_base import EntityBase
+from framework_utility.logger_mixin import LoggerMixin
 
 
-class RepositoryBase[TEntity: EntityBase]:
+class RepositoryBase[TEntity: EntityBase](LoggerMixin):
     """Access mapped entities using a Session owned by the unit of work."""
 
     # region Constructor & Special Methods

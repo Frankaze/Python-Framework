@@ -13,6 +13,7 @@ version = "0.1.0"
 source = { editable = "../framework_repository" }
 dependencies = [
     { name = "framework-common" },
+    { name = "framework-utility" },
     { name = "psycopg", extra = ["binary"] },
     { name = "sqlalchemy" },
 ]
@@ -20,6 +21,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "framework-common", editable = "../framework_common" },
+    { name = "framework-utility", editable = "../framework_utility" },
     { name = "psycopg", extras = ["binary"], specifier = "==3.3.9" },
     { name = "sqlalchemy", specifier = "==2.1.8" },
 ]
@@ -31,6 +33,7 @@ source = { editable = "." }
 dependencies = [
     { name = "framework-common" },
     { name = "framework-repository" },
+    { name = "framework-utility" },
     { name = "sqlalchemy" },
 ]
 
@@ -38,8 +41,20 @@ dependencies = [
 requires-dist = [
     { name = "framework-common", editable = "../framework_common" },
     { name = "framework-repository", editable = "../framework_repository" },
+    { name = "framework-utility", editable = "../framework_utility" },
     { name = "sqlalchemy" },
 ]
+
+[[package]]
+name = "framework-utility"
+version = "0.1.0"
+source = { editable = "../framework_utility" }
+dependencies = [
+    { name = "framework-common" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "framework-common", editable = "../framework_common" }]
 
 [[package]]
 name = "psycopg"

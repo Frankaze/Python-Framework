@@ -3,6 +3,28 @@ revision = 5
 requires-python = ">=3.13"
 
 [[package]]
+name = "framework-common"
+version = "0.1.0"
+source = { editable = "../framework_common" }
+
+[[package]]
 name = "framework-source"
 version = "0.1.0"
 source = { editable = "." }
+dependencies = [
+    { name = "framework-utility" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "framework-utility", editable = "../framework_utility" }]
+
+[[package]]
+name = "framework-utility"
+version = "0.1.0"
+source = { editable = "../framework_utility" }
+dependencies = [
+    { name = "framework-common" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "framework-common", editable = "../framework_common" }]

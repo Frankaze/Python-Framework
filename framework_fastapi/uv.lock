@@ -63,6 +63,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "framework-common" },
     { name = "framework-repository" },
+    { name = "framework-utility" },
     { name = "pydantic" },
     { name = "sqlalchemy" },
 ]
@@ -72,6 +73,7 @@ requires-dist = [
     { name = "fastapi", specifier = "==0.162.2" },
     { name = "framework-common", editable = "../framework_common" },
     { name = "framework-repository", editable = "../framework_repository" },
+    { name = "framework-utility", editable = "../framework_utility" },
     { name = "pydantic", specifier = "==2.14.3" },
     { name = "sqlalchemy" },
 ]
@@ -82,6 +84,7 @@ version = "0.1.0"
 source = { editable = "../framework_repository" }
 dependencies = [
     { name = "framework-common" },
+    { name = "framework-utility" },
     { name = "psycopg", extra = ["binary"] },
     { name = "sqlalchemy" },
 ]
@@ -89,9 +92,21 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "framework-common", editable = "../framework_common" },
+    { name = "framework-utility", editable = "../framework_utility" },
     { name = "psycopg", extras = ["binary"], specifier = "==3.3.9" },
     { name = "sqlalchemy", specifier = "==2.1.8" },
 ]
+
+[[package]]
+name = "framework-utility"
+version = "0.1.0"
+source = { editable = "../framework_utility" }
+dependencies = [
+    { name = "framework-common" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "framework-common", editable = "../framework_common" }]
 
 [[package]]
 name = "idna"
