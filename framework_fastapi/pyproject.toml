@@ -1,6 +1,6 @@
 [project]
 name = "framework-fastapi"
-version = "0.1.0"
+version = "0.0.0"
 description = "Reusable controller and API model foundations for FastAPI applications."
 readme = "README.md"
 requires-python = ">=3.13"

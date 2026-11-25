@@ -1,6 +1,6 @@
 [project]
 name = "framework-utility"
-version = "0.1.0"
+version = "0.0.0"
 description = "Reusable runtime utilities for Python applications."
 readme = "README.md"
 requires-python = ">=3.13"

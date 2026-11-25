@@ -1,6 +1,6 @@
 [project]
 name = "framework-service"
-version = "0.1.0"
+version = "0.0.0"
 description = "Reusable service and mapper foundations for Python applications."
 readme = "README.md"
 requires-python = ">=3.13"

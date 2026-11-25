@@ -52,12 +52,12 @@ wheels = [
 
 [[package]]
 name = "framework-common"
-version = "0.1.0"
+version = "0.0.0"
 source = { editable = "../framework_common" }
 
 [[package]]
 name = "framework-fastapi"
-version = "0.1.0"
+version = "0.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
@@ -80,7 +80,7 @@ requires-dist = [
 
 [[package]]
 name = "framework-repository"
-version = "0.1.0"
+version = "0.0.0"
 source = { editable = "../framework_repository" }
 dependencies = [
     { name = "framework-common" },
@@ -99,7 +99,7 @@ requires-dist = [
 
 [[package]]
 name = "framework-utility"
-version = "0.1.0"
+version = "0.0.0"
 source = { editable = "../framework_utility" }
 dependencies = [
     { name = "framework-common" },
